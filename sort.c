@@ -27,11 +27,55 @@ size_t Size(void* ptr)
 	return ((size_t*)ptr)[-1];
 }
 
-// implement merge sort
-// extraMemoryAllocated counts bytes of extra memory allocated
+//merge lists and sort smallest to largest
 void mergeSort(int pData[], int l, int r)
 {
+	FILE* file1 = fopen("file1.txt", "r");
+	FILE* file2 = fopen("file2.txt", "r");
+	FILE* file3 = fopen("file3.txt", "r");
+	FILE* file4 = fopen("file4.txt", "r");
+
+	int list[l * 4];
+	int totalNumbers = 0;
+
+	if (file1 && file2 && file3 && file4) {
+		int num, i = 0;
+
+		while (fscanf(file1, "%d", &num) == 1) {
+			list[i++] = num;
+			totalNumbers++;
+		}
+		while (fscanf(file2, "%d", &num) == 1) {
+			list[i++] = num;
+			totalNumbers++;
+		}
+		while (fscanf(file3, "%d", &num) == 1) {
+			list[i++] = num;
+			totalNumbers++;
+		}
+		while (fscanf(file4, "%d", &num) == 1) {
+			list[i++] = num;
+			totalNumbers++;
+		}
+
+		fclose(file1);
+		fclose(file2);
+		fclose(file3);
+		fclose(file4);
+
+		qsort(list, totalNumbers, sizeof(int), compare);
+
+		for (int j = 0; j < totalNumbers; j++) {
+			printf("%d ", list[j]);
+		}
+	}
+	printArray(list, sizeof(list));
 }
+
+int compare(const void* a, const void* b) {
+	return (*(int*)a - *(int*)b);
+}
+
 
 // parses input file to an integer array
 int parseData(char *inputFileName, int **ppData)
@@ -67,17 +111,18 @@ int parseData(char *inputFileName, int **ppData)
 // prints first and last 100 items in the data array
 void printArray(int pData[], int dataSz)
 {
-	int i, sz = dataSz - 100;
+	int i, sz = (dataSz > 100 ? dataSz - 100 : 0);
+	int firstHundred = (dataSz < 100 ? dataSz : 100);
 	printf("\tData:\n\t");
-	for (i=0;i<100;++i)
+	for (i = 0; i < firstHundred; ++i)
 	{
-		printf("%d ",pData[i]);
+		printf("%d ", pData[i]);
 	}
 	printf("\n\t");
-	
-	for (i=sz;i<dataSz;++i)
+
+	for (i = sz; i < dataSz; ++i)
 	{
-		printf("%d ",pData[i]);
+		printf("%d ", pData[i]);
 	}
 	printf("\n\n");
 }
